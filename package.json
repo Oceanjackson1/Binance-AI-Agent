@@ -1,0 +1,35 @@
+{
+  "name": "binance-skills-mcp",
+  "version": "1.0.0",
+  "description": "Binance Skills Hub MCP Server - All 25 Binance Skills as MCP Tools",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "binance-skills-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": ["binance", "mcp", "crypto", "trading", "ai", "agent"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "dotenv": "^16.4.7",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.2"
+  }
+}
