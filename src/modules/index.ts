@@ -28,6 +28,7 @@ import { registerMarketRankModule } from "./market-rank/index.js";
 import { registerMemeRushModule } from "./meme-rush/index.js";
 import { registerTradingSignalModule } from "./trading-signal/index.js";
 import { registerSquarePostModule } from "./square-post/index.js";
+import { registerGitHubModule } from "./github/index.js";
 
 interface ModuleEntry {
   name: string;
@@ -73,5 +74,12 @@ export function registerAllModules(server: McpServer, client: BinanceClient): vo
       logger.info(`Module disabled: ${mod.name}`);
     }
   }
-  logger.info(`Registered ${count} of ${modules.length} modules`);
+  // GitHub module (no BinanceClient needed)
+  if (isModuleEnabled("github")) {
+    registerGitHubModule(server);
+    count++;
+    logger.debug("Registered module: github");
+  }
+
+  logger.info(`Registered ${count} modules`);
 }

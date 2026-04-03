@@ -1,6 +1,6 @@
 # Binance AI Agent
 
-基于 MCP（Model Context Protocol）协议的 **Binance 全功能 AI Agent**，将 Binance Skills Hub 的 25 个技能模块映射为 170 个 MCP 工具，让 AI 助手（Claude Code / Claude Desktop 等）可以通过自然语言完成 Binance 上的一切操作。
+基于 MCP（Model Context Protocol）协议的 **Binance 全功能 AI Agent**，将 Binance Skills Hub 的 25 个技能模块 + GitHub 代码查询模块映射为 180 个 MCP 工具，让 AI 助手（Claude Code / Claude Desktop 等）可以通过自然语言完成 Binance 上的一切操作，并支持查看和搜索 GitHub 代码仓库。
 
 ## 功能概览
 
@@ -31,8 +31,9 @@
 | **Meme 交易** | meme-rush | 5 | Pump.fun/Four.meme 代币交易 |
 | **交易信号** | trading-signal | 4 | Smart Money / 巨鲸预警 |
 | **币安广场** | square-post | 4 | 发帖、浏览、热门内容 |
+| **GitHub 代码** | github | 10 | 浏览仓库、读取代码、搜索代码、提交历史、代码对比 |
 
-**合计：25 个模块，170 个工具**
+**合计：26 个模块，180 个工具**
 
 ## 快速开始
 
@@ -133,6 +134,20 @@ npm run dev
 "最近有什么聪明钱大额买入的信号？"
 ```
 
+### GitHub 代码查询示例
+
+```
+"列出 Ocean 的所有 GitHub 仓库"
+"查看 Binance-AI-Agent 项目的目录结构"
+"读取 src/core/client.ts 的代码内容"
+"在 Ocean 的仓库中搜索 BinanceClient 相关代码"
+"查看 Binance-AI-Agent 的最近提交记录"
+"这个项目用了哪些编程语言？"
+"对比 main 分支和上一次提交的代码差异"
+```
+
+> 提示：可设置 `GITHUB_TOKEN` 环境变量提高 API 请求频率限制（未设置时为 60次/小时，设置后为 5000次/小时）。
+
 ## 项目结构
 
 ```
@@ -147,7 +162,7 @@ npm run dev
 │   │   ├── errors.ts            # 错误类型定义
 │   │   ├── rate-limiter.ts      # 速率限制器
 │   │   └── types.ts             # 共享类型
-│   ├── modules/                 # 25 个技能模块
+│   ├── modules/                 # 26 个技能模块
 │   │   ├── index.ts             # 中央模块注册
 │   │   ├── spot/                # 现货交易
 │   │   ├── usds-futures/        # U本位合约
@@ -173,7 +188,8 @@ npm run dev
 │   │   ├── market-rank/         # 市场排行
 │   │   ├── meme-rush/           # Meme 交易
 │   │   ├── trading-signal/      # 交易信号
-│   │   └── square-post/         # 币安广场
+│   │   ├── square-post/         # 币安广场
+│   │   └── github/              # GitHub 代码查询
 │   └── utils/
 │       ├── logger.ts            # 日志工具
 │       └── formatting.ts        # 响应格式化
@@ -192,20 +208,20 @@ npm run dev
 └────────────────┬─────────────────────────┘
                  │ MCP 协议 (stdio)
 ┌────────────────▼─────────────────────────┐
-│           MCP Server (170 tools)         │
+│           MCP Server (180 tools)         │
 │  ┌────────────────────────────────────┐  │
-│  │    25 个技能模块（Skill Modules）    │  │
-│  └──────────────┬─────────────────────┘  │
-│  ┌──────────────▼─────────────────────┐  │
-│  │    BinanceClient（核心客户端）       │  │
-│  │  签名 · 限速 · 重试 · 环境路由      │  │
-│  └──────────────┬─────────────────────┘  │
-└─────────────────┬────────────────────────┘
-                  │ HTTPS
-┌─────────────────▼────────────────────────┐
-│          Binance API 服务器               │
-│  api · fapi · dapi · eapi · papi         │
-└──────────────────────────────────────────┘
+│  │   26 个技能模块（Skill Modules）     │  │
+│  └───────┬────────────────┬───────────┘  │
+│  ┌───────▼───────┐ ┌──────▼──────────┐   │
+│  │ BinanceClient │ │  GitHub Client  │   │
+│  │ 签名·限速·重试 │ │  代码查询·搜索  │   │
+│  └───────┬───────┘ └──────┬──────────┘   │
+└──────────┬────────────────┬──────────────┘
+           │ HTTPS          │ HTTPS
+┌──────────▼──────────┐ ┌───▼──────────────┐
+│  Binance API 服务器  │ │  GitHub API      │
+│ api·fapi·dapi·eapi  │ │ api.github.com   │
+└─────────────────────┘ └──────────────────┘
 ```
 
 ## 安全设计
